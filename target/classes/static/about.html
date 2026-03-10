@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>About - MicroSpringBoot</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: 'Segoe UI', Arial, sans-serif; background: #f0f4f8; color: #2d3748; padding: 40px 20px; }
+        .container { max-width: 820px; margin: 0 auto; background: #fff; border-radius: 10px; box-shadow: 0 4px 16px rgba(0,0,0,0.1); padding: 40px; }
+        h1 { color: #276749; font-size: 2rem; margin-bottom: 8px; }
+        h2 { color: #2d6a4f; font-size: 1.2rem; margin: 28px 0 12px; border-bottom: 2px solid #e2e8f0; padding-bottom: 6px; }
+        p  { line-height: 1.6; margin-bottom: 12px; color: #4a5568; }
+        code { background: #edf2f7; padding: 2px 7px; border-radius: 4px; font-family: monospace; }
+        .badge { display: inline-block; background: #276749; color: white; border-radius: 4px; padding: 2px 10px; font-size: 0.8rem; font-weight: bold; margin-right: 8px; }
+        ul { list-style: none; }
+        li { display: flex; align-items: center; padding: 10px 14px; margin-bottom: 8px; background: #f7fafc; border: 1px solid #e2e8f0; border-radius: 6px; }
+        a { color: #276749; font-weight: bold; }
+        footer { margin-top: 32px; text-align: center; color: #a0aec0; font-size: 0.85rem; }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>Sobre MicroSpringBoot</h1>
+    <p>Este proyecto demuestra capacidades de reflexión en Java para construir un mini-framework IoC.</p>
+
+    <h2>Tecnologías</h2>
+    <ul>
+        <li><span class="badge">Java</span>Reflection API — escanea clases y métodos en tiempo de ejecución</li>
+        <li><span class="badge">IoC</span>Annotations @RestController, @GetMapping, @RequestParam</li>
+        <li><span class="badge">HTTP</span>ServerSocket puro — sin dependencias externas</li>
+        <li><span class="badge">Build</span>Maven — gestión del ciclo de vida</li>
+    </ul>
+
+    <h2>Flujo</h2>
+    <p><code>ComponentScanner</code> escanea el classpath → encuentra <code>@RestController</code> → <code>DispatcherHandler</code> registra rutas <code>@GetMapping</code> → <code>HttpServer</code> recibe peticiones → invoca el método via reflexión.</p>
+
+    <p style="margin-top:20px"><a href="/">← Volver al inicio</a></p>
+    <footer>MicroSpringBoot &mdash; Taller TDSE</footer>
+</div>
+</body>
+</html>

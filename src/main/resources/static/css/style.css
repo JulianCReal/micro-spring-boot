@@ -1,0 +1,63 @@
+/* MicroSpringBoot - Main Stylesheet */
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+    font-family: 'Segoe UI', Arial, sans-serif;
+    background: #f0f4f8;
+    color: #2d3748;
+    padding: 40px 20px;
+}
+
+.container {
+    max-width: 820px;
+    margin: 0 auto;
+    background: #ffffff;
+    border-radius: 10px;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.1);
+    padding: 40px;
+}
+
+h1 { color: #276749; font-size: 2rem; margin-bottom: 8px; }
+h2 { color: #2d6a4f; font-size: 1.3rem; margin: 28px 0 12px; border-bottom: 2px solid #e2e8f0; padding-bottom: 6px; }
+
+p  { line-height: 1.6; margin-bottom: 12px; color: #4a5568; }
+
+.badge {
+    display: inline-block;
+    background: #276749;
+    color: white;
+    border-radius: 4px;
+    padding: 2px 10px;
+    font-size: 0.8rem;
+    font-weight: bold;
+    letter-spacing: 0.5px;
+    margin-right: 6px;
+}
+
+.endpoint-list { list-style: none; }
+.endpoint-list li {
+    display: flex;
+    align-items: center;
+    padding: 10px 14px;
+    margin-bottom: 8px;
+    background: #f7fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 6px;
+    transition: background 0.15s;
+}
+.endpoint-list li:hover { background: #ebf8f0; border-color: #9ae6b4; }
+
+.endpoint-list a { color: #276749; text-decoration: none; font-weight: 600; font-family: monospace; font-size: 0.95rem; }
+.endpoint-list a:hover { text-decoration: underline; }
+.endpoint-list .desc { margin-left: auto; color: #718096; font-size: 0.88rem; }
+
+code {
+    background: #edf2f7;
+    padding: 2px 7px;
+    border-radius: 4px;
+    font-family: monospace;
+    font-size: 0.9em;
+}
+
+footer { margin-top: 32px; text-align: center; color: #a0aec0; font-size: 0.85rem; }
