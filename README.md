@@ -33,9 +33,15 @@ micro-spring-boot/
 │   │   ├── ComponentScanner.java          # Escanea classpath por reflexión
 │   │   ├── DispatcherHandler.java         # Registra rutas e invoca métodos
 │   │   └── HttpServer.java                # Servidor TCP/HTTP puro
-│   └── controllers/
-│       ├── HelloController.java           # Controlador de ejemplo básico
-│       └── GreetingController.java        # Controlador con @RequestParam
+│   ├── controllers/
+│   │   ├── HelloController.java           # Controlador de ejemplo básico
+│   │   └── GreetingController.java        # Controlador con @RequestParam
+│   └── examples/
+│       ├── Tests.java                     # Anotación @Tests personalizada
+│       ├── Foo.java                       # Clase con métodos de prueba
+│       ├── RunTests.java                  # Mini framework de testing por reflexión
+│       ├── InvokeMain.java                # Invoca main() de cualquier clase por reflexión
+│       └── ReflexionNavigator.java        # Explora constructores, campos y métodos
 └── src/main/resources/static/
     ├── index.html                         # Página de inicio
     └── about.html                         # Página estática de ejemplo
@@ -148,4 +154,5 @@ java -jar micro-spring-boot-1.0-SNAPSHOT-jar-with-dependencies.jar 35000
 ![img_1.png](images/img_1.png)
 ![img_2.png](images/img_2.png)
 ![img_3.png](images/img_3.png)
+(Aqui esta la version desactualizada, pero es evidencia de que si corre en ec2)
 ![img_4.png](images/img_4.png)
