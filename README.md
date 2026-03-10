@@ -149,12 +149,11 @@ java -jar micro-spring-boot-1.0-SNAPSHOT-jar-with-dependencies.jar 35000
 > Recuerda abrir el puerto en el **Security Group** de AWS (TCP, puerto 35000, origen 0.0.0.0/0).
 
 ---
-- Evidencia:
-![img.png](images/img.png)
-![img_1.png](images/img_1.png)
-![img_2.png](images/img_2.png)
-![img_3.png](images/img_3.png)
+Evidencia:
+- ![img.png](images/img.png)
+- ![img_1.png](images/img_1.png)
+- ![img_2.png](images/img_2.png)
+- ![img_3.png](images/img_3.png)
 
-(Aqui esta la version desactualizada, pero es evidencia de que si corre en ec2)
-
-![img_4.png](images/img_4.png)
+  (Aqui esta la version desactualizada, pero es evidencia de que si corre en ec2)
+- ![img_4.png](images/img_4.png)
