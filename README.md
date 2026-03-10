@@ -1,127 +1,151 @@
 # MicroSpringBoot 🌱
 
-Servidor web HTTP mínimo con framework IoC (Inversion of Control) construido en Java puro, sin dependencias externas. Demuestra las capacidades de reflexión de Java para descubrir y registrar componentes en tiempo de ejecución.
+Servidor web HTTP mínimo construido en Java puro que implementa un framework **IoC (Inversion of Control)** desde cero, demostrando las capacidades de reflexión del lenguaje para cargar y registrar componentes en tiempo de ejecución sin dependencias externas.
+
+## Demo en AWS
+> **http://54.224.49.251:35000/**
+
+---
+
+## Descripción
+
+Este proyecto implementa desde cero:
+
+- Servidor HTTP capaz de entregar páginas HTML e imágenes PNG
+- Escaneo automático del classpath buscando clases anotadas con `@RestController`
+- Registro dinámico de rutas mediante `@GetMapping`
+- Resolución de parámetros HTTP con `@RequestParam` y valores por defecto
+- Invocación de métodos en tiempo de ejecución usando `java.lang.reflect`
+- Atención de múltiples solicitudes no concurrentes
+
+---
 
 ## Arquitectura
-
 ```
-MicroSpringBoot (main)
-    │
-    ├── ComponentScanner      ← Escanea classpath buscando @RestController
-    ├── DispatcherHandler     ← Registra rutas y las invoca via reflexión
-    └── HttpServer            ← Servidor TCP que habla HTTP/1.1
+micro-spring-boot/
+├── src/main/java/org/example/microspringboot/
+│   ├── MicroSpringBoot.java               # Punto de entrada principal
+│   ├── annotations/
+│   │   ├── RestController.java            # @RestController
+│   │   ├── GetMapping.java                # @GetMapping
+│   │   └── RequestParam.java              # @RequestParam
+│   ├── framework/
+│   │   ├── ComponentScanner.java          # Escanea classpath por reflexión
+│   │   ├── DispatcherHandler.java         # Registra rutas e invoca métodos
+│   │   └── HttpServer.java                # Servidor TCP/HTTP puro
+│   └── controllers/
+│       ├── HelloController.java           # Controlador de ejemplo básico
+│       └── GreetingController.java        # Controlador con @RequestParam
+└── src/main/resources/static/
+    ├── index.html                         # Página de inicio
+    └── about.html                         # Página estática de ejemplo
 ```
 
-### Anotaciones soportadas
+---
 
-| Anotación | Objetivo | Descripción |
-|---|---|---|
-| `@RestController` | Clase | Marca la clase como componente REST |
-| `@GetMapping("/path")` | Método | Registra el método como handler de GET |
-| `@RequestParam(value="x", defaultValue="y")` | Parámetro | Inyecta query params |
+## Cómo funciona el IoC (Reflexión en acción)
+```java
+// 1. Detectar componentes en tiempo de ejecución
+if (clazz.isAnnotationPresent(RestController.class)) { ... }
 
-## Cómo ejecutar
+// 2. Registrar rutas leyendo anotaciones de métodos
+GetMapping mapping = method.getAnnotation(GetMapping.class);
+routes.put(mapping.value(), method);
 
-### Prerrequisitos
+// 3. Resolver @RequestParam desde el query string
+RequestParam rp = parameter.getAnnotation(RequestParam.class);
+args[i] = queryParams.getOrDefault(rp.value(), rp.defaultValue());
+
+// 4. Invocar el método dinámicamente sin conocerlo en tiempo de compilación
+Object result = method.invoke(controllerInstance, args);
+```
+
+---
+
+## Prerrequisitos
+
 - Java 11+
 - Maven 3.6+
+
+---
+
+## Compilación y ejecución
 
 ### Compilar
 ```bash
 mvn clean package
 ```
 
-### Modo 1: Auto-scan (recomendado)
-El framework escanea automáticamente el classpath buscando `@RestController`:
+### Ejecutar (auto-scan del classpath)
 ```bash
 java -jar target/micro-spring-boot-1.0-SNAPSHOT-jar-with-dependencies.jar
 ```
 
-### Modo 2: Especificar clase explícitamente (como el framework de TEST)
+### Ejecutar en un puerto específico
+```bash
+java -jar target/micro-spring-boot-1.0-SNAPSHOT-jar-with-dependencies.jar 35000
+```
+
+### Cargar un controlador explícitamente (modo línea de comandos)
 ```bash
 java -cp target/classes org.example.microspringboot.MicroSpringBoot \
      org.example.microspringboot.controllers.HelloController
 ```
 
-### Puerto personalizado
-```bash
-java -jar target/micro-spring-boot-1.0-SNAPSHOT-jar-with-dependencies.jar 9090
-```
+---
 
-## Endpoints de ejemplo
+## Endpoints disponibles
 
-| Endpoint | Descripción |
-|---|---|
-| `GET /` | Página principal |
-| `GET /hello` | Hello World |
-| `GET /pi` | Valor de Pi |
-| `GET /greeting` | Saludo (defaultValue="World") |
-| `GET /greeting?name=Ana` | Saludo con @RequestParam |
-| `GET /farewell?name=Carlos` | Despedida con @RequestParam |
-| `GET /time` | Hora del servidor |
-| `GET /about.html` | Página HTML estática |
+| Método | URL | Descripción |
+|--------|-----|-------------|
+| GET | `/` | Página principal |
+| GET | `/hello` | Hello World |
+| GET | `/pi` | Valor de π |
+| GET | `/greeting` | Saludo con nombre por defecto (`World`) |
+| GET | `/greeting?name=Ana` | Saludo con `@RequestParam` |
+| GET | `/time` | Hora actual del servidor |
+| GET | `/about.html` | Página HTML estática |
+
+---
 
 ## Ejemplo de controlador personalizado
-
 ```java
 @RestController
 public class MiController {
 
-    @GetMapping("/suma")
-    public String suma(@RequestParam(value = "a", defaultValue = "0") String a,
-                       @RequestParam(value = "b", defaultValue = "0") String b) {
-        int resultado = Integer.parseInt(a) + Integer.parseInt(b);
-        return "Resultado: " + resultado;
+    @GetMapping("/greeting")
+    public String greeting(
+        @RequestParam(value = "name", defaultValue = "World") String name) {
+        return "Hola, " + name + "!";
     }
 }
 ```
+
+El framework lo descubre automáticamente al arrancar — no hace falta registrarlo en ningún archivo de configuración.
+
+---
 
 ## Despliegue en AWS EC2
-
-1. **Crear instancia EC2** (Amazon Linux 2, t2.micro)
-2. **Abrir puerto 8080** en Security Groups (inbound rule TCP 8080)
-3. **Instalar Java**:
-   ```bash
-   sudo yum install java-11-amazon-corretto -y
-   ```
-4. **Subir el JAR**:
-   ```bash
-   scp -i key.pem target/micro-spring-boot-1.0-SNAPSHOT-jar-with-dependencies.jar ec2-user@<IP>:~
-   ```
-5. **Ejecutar**:
-   ```bash
-   java -jar micro-spring-boot-1.0-SNAPSHOT-jar-with-dependencies.jar
-   ```
-6. **Acceder**: `http://<IP_PUBLICA>:8080/`
-
-## Tests
-
 ```bash
-mvn test
+# 1. Compilar localmente
+mvn clean package
+
+# 2. Subir el JAR a EC2
+scp -i key.pem target/micro-spring-boot-1.0-SNAPSHOT-jar-with-dependencies.jar ec2-user@<IP>:~
+
+# 3. Instalar Java en EC2 (Amazon Linux)
+sudo yum install java-21-amazon-corretto -y
+
+# 4. Ejecutar
+java -jar micro-spring-boot-1.0-SNAPSHOT-jar-with-dependencies.jar 35000
 ```
 
-## Cómo funciona la reflexión (IoC explicado)
+> Recuerda abrir el puerto en el **Security Group** de AWS (TCP, puerto 35000, origen 0.0.0.0/0).
 
-```java
-// 1. Escanear classpath
-Class<?> clazz = classLoader.loadClass(className);
-
-// 2. Detectar @RestController via reflexión
-if (clazz.isAnnotationPresent(RestController.class)) { ... }
-
-// 3. Registrar métodos @GetMapping
-for (Method m : clazz.getDeclaredMethods()) {
-    if (m.isAnnotationPresent(GetMapping.class)) {
-        routes.put(m.getAnnotation(GetMapping.class).value(), m);
-    }
-}
-
-// 4. Resolver @RequestParam en tiempo de llamada
-for (Parameter p : method.getParameters()) {
-    RequestParam rp = p.getAnnotation(RequestParam.class);
-    args[i] = queryParams.getOrDefault(rp.value(), rp.defaultValue());
-}
-
-// 5. Invocar el método dinámicamente
-Object result = method.invoke(instance, args);
-```
+---
+- Evidencia:
+![img.png](images/img.png)
+![img_1.png](images/img_1.png)
+![img_2.png](images/img_2.png)
+![img_3.png](images/img_3.png)
+![img_4.png](images/img_4.png)
