@@ -1,0 +1,13 @@
+version: '3.8'
+
+services:
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: micro-spring-boot
+    ports:
+      - "8080:6000"
+    environment:
+      - PORT=6000
+    restart: unless-stopped
